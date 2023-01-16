@@ -1,4 +1,5 @@
 require 'metric_item.rb'
+require 'metrics.rb'
 
 describe MetricItem do
     let(:item_instance) {MetricItem.new(web_address: "/web_adress", ip_address: "255.255.255.255")}
@@ -49,5 +50,16 @@ describe MetricItem do
             metric_item.add_ip("255.255.255.255")
             expect(metric_item.visit_count).to eq 2
         end
+    end
+end
+
+describe Metrics do
+    it "should be initialized with empty hash" do
+        metrics = Metrics.new
+        expect(metrics.get_metrics).to eql Hash.new
+    end
+
+    it "should implement add_metric" do
+        expect(Metrics.new).to respond_to(:add_metric)
     end
 end
