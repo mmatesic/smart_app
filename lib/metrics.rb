@@ -17,4 +17,14 @@ class Metrics
     def get_metrics
         @log_metrics
     end
+
+    private
+
+    def get_visits
+        @log_metrics.transform_values{|value| value.visit_count}
+    end
+
+    def get_unique_visits
+        @log_metrics.transform_values{|value| value.ip_addresses.size}
+    end
 end

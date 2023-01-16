@@ -118,7 +118,7 @@ describe Report do
             report.add_metric("/home", "255.255.255.255")
             report.add_metric("/home", "168.200.255.254")
 
-            expect(report.get_visits).to include("web_adress"=>1, "/home"=>2)
+            expect(report.get_visits).to include("/web_adress"=>1, "/home"=>2)
         end
 
         it "should get home adress with 2 unique visits" do
@@ -139,7 +139,7 @@ describe Report do
             report.add_metric("/home", "255.255.255.255")
             report.add_metric("/home", "255.255.255.255")
 
-            expect(report.get_unique_visits).to include("web_adress"=>1, "/home"=>1)
+            expect(report.get_unique_visits).to include("/web_adress"=>1, "/home"=>1)
         end
     end
 end
