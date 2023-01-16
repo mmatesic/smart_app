@@ -178,7 +178,7 @@ describe Parser do
             allow(IO).to receive(:foreach).and_yield("/home 255.255.255.255\n").and_yield("/home 255.255.255.255\n").and_yield("/home 168.255.255.255\n")
 
             parser.read_file('nofile.txt')
-            expect { parser.report_unique_visits_count }.to output("/home 2 visits\n").to_stdout
+            expect { parser.report_unique_visits_count }.to output("/home 2 unique visits\n").to_stdout
         end
 
         it "should return ordered unique results by counts descending" do
@@ -186,7 +186,7 @@ describe Parser do
             allow(IO).to receive(:foreach).and_yield("/web_adress 168.255.255.255\n").and_yield("/home 255.255.255.255\n").and_yield("/web_adress 168.255.255.255\n").and_yield("/home 168.255.255.255\n")
 
             parser.read_file('nofile.txt')
-            expect { parser.report_unique_visits_count }.to output("/home 2 visits\n/web_adress 1 visits\n").to_stdout
+            expect { parser.report_unique_visits_count }.to output("/home 2 unique visits\n/web_adress 1 unique visits\n").to_stdout
         end
     end
 end
