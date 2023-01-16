@@ -62,4 +62,25 @@ describe Metrics do
     it "should implement add_metric" do
         expect(Metrics.new).to respond_to(:add_metric)
     end
+
+    it "should add page if not already existing" do
+        metrics = Metrics.new
+
+        metrics.add_metric("/web_adress", "255.255.255.255")
+        metrics.add_metric("/home", "255.255.255.255")
+
+        expect(metrics.get_metrics.keys).to eq ["/web_adress", "/home"]
+
+    end
+
+    it "should add ip address if page already exists" do
+        metrics = Metrics.new
+
+        metrics.add_metric("/web_adress", "255.255.255.255")
+        metrics.add_metric("/home", "255.255.255.255")
+        metrics.add_metric("/home", "255.255.255.254")
+
+        expect(metrics.get_metrics.keys.size).to eq 2
+        expect(metrics.get_metrics["/home"].ip_addresses).to eq Set["255.255.255.255", "255.255.255.254"]
+    end
 end
