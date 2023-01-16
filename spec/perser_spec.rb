@@ -189,4 +189,22 @@ describe Parser do
             expect { parser.report_unique_visits_count }.to output("/home 2 unique visits\n/web_adress 1 unique visits\n").to_stdout
         end
     end
+
+    context "When parsing input line" do
+        it "should check ip format" do
+            parser = parser_instance
+            expect(parser.valid_metrics?("/web_adress", "255.255.255.255")).to eq true
+            expect(parser.valid_metrics?("/web_adress", "355.855.65.2")).to eq true
+            expect(parser.valid_metrics?("/web_adress", "355.855.65")).to eq false
+        end
+
+        it "should check web address format" do
+            parser = parser_instance
+            expect(parser.valid_metrics?("/web_adress", "255.255.255.255")).to eq true
+            expect(parser.valid_metrics?("/web_adress/", "255.255.255.255")).to eq true
+            expect(parser.valid_metrics?("/web_adress/2", "255.255.255.255")).to eq true
+            expect(parser.valid_metrics?("/web_adress/new_address", "255.255.255.255")).to eq true
+            expect(parser.valid_metrics?("web_adress", "255.255.255.255")).to eq false
+        end
+    end
 end
