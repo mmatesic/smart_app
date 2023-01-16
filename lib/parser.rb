@@ -1,3 +1,5 @@
+require './lib/report.rb'
+
 class Parser
     def initialize
         @report = Report.new

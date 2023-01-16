@@ -1,3 +1,5 @@
+require './lib/metrics.rb'
+
 class Report<Metrics
     def get_visits
         sort_metrics(super())

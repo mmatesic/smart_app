@@ -1,3 +1,5 @@
+require './lib/metric_item.rb'
+
 class Metrics
     def initialize()
         @log_metrics = Hash.new
