@@ -3,6 +3,10 @@ require 'metric_item.rb'
 describe MetricItem do
     let(:item_instance) {MetricItem.new(web_address: "/web_adress", ip_address: "255.255.255.255")}
 
+    it "should raise error when creating without arguments" do
+        expect {MetricItem.new}.to raise_error(ArgumentError)
+    end
+
     it "should receive two arguments when initialized" do
         metric_item = item_instance
         expect(metric_item.web_address).to eql "/web_adress"
