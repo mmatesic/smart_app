@@ -6,4 +6,8 @@ class MetricItem
         @web_address = web_address
         @ip_addresses = Set.new([ip_address])
     end
+
+    def add_ip(ip)
+        @ip_addresses << ip
+    end
 end
