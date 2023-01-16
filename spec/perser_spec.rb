@@ -3,7 +3,7 @@ require 'metrics.rb'
 require 'report.rb'
 
 describe MetricItem do
-    let(:item_instance) {MetricItem.new(web_address: "/web_adress", ip_address: "255.255.255.255")}
+    let(:item_instance) {MetricItem.new(web_address: "/web_address", ip_address: "255.255.255.255")}
 
     it "should raise error when creating without arguments" do
         expect {MetricItem.new}.to raise_error(ArgumentError)
@@ -11,7 +11,7 @@ describe MetricItem do
 
     it "should receive two arguments when initialized" do
         metric_item = item_instance
-        expect(metric_item.web_address).to eql "/web_adress"
+        expect(metric_item.web_address).to eql "/web_address"
         expect(metric_item.ip_addresses).to eql Set["255.255.255.255"]
     end
 
@@ -20,7 +20,7 @@ describe MetricItem do
         expect(metric_item.visit_count).to eql 1
     end
 
-    context "MetricItem class should add ip addresses" do
+    context "When testing add_ip method" do
 
         it "should implement add_ip" do
             expect(item_instance).to respond_to(:add_ip)
@@ -60,29 +60,32 @@ describe Metrics do
         expect(metrics.get_metrics).to eql Hash.new
     end
 
-    it "should implement add_metric" do
-        expect(Metrics.new).to respond_to(:add_metric)
-    end
+    context "When testing add_metric method" do
 
-    it "should add page if not already existing" do
-        metrics = Metrics.new
+        it "should implement add_metric" do
+            expect(Metrics.new).to respond_to(:add_metric)
+        end
 
-        metrics.add_metric("/web_adress", "255.255.255.255")
-        metrics.add_metric("/home", "255.255.255.255")
+        it "should add page if not already existing" do
+            metrics = Metrics.new
 
-        expect(metrics.get_metrics.keys).to eq ["/web_adress", "/home"]
+            metrics.add_metric("/web_address", "255.255.255.255")
+            metrics.add_metric("/home", "255.255.255.255")
 
-    end
+            expect(metrics.get_metrics.keys).to eq ["/web_address", "/home"]
 
-    it "should add ip address if page already exists" do
-        metrics = Metrics.new
+        end
 
-        metrics.add_metric("/web_adress", "255.255.255.255")
-        metrics.add_metric("/home", "255.255.255.255")
-        metrics.add_metric("/home", "255.255.255.254")
+        it "should add ip address if page already exists" do
+            metrics = Metrics.new
 
-        expect(metrics.get_metrics.keys.size).to eq 2
-        expect(metrics.get_metrics["/home"].ip_addresses).to eq Set["255.255.255.255", "255.255.255.254"]
+            metrics.add_metric("/web_address", "255.255.255.255")
+            metrics.add_metric("/home", "255.255.255.255")
+            metrics.add_metric("/home", "255.255.255.254")
+
+            expect(metrics.get_metrics.keys.size).to eq 2
+            expect(metrics.get_metrics["/home"].ip_addresses).to eq Set["255.255.255.255", "255.255.255.254"]
+        end
     end
 end
 
@@ -99,9 +102,9 @@ describe Report do
         expect(Report.new).to respond_to(:get_unique_visits)
     end
 
-    context "Report should get correct values" do
+    context "When testing correct values" do
 
-        it "should get home adress with 3 visits" do
+        it "should return home address with 3 visits" do
             report = Report.new
 
             report.add_metric("/home", "255.255.255.255")
@@ -111,17 +114,17 @@ describe Report do
             expect(report.get_visits).to include("/home"=>3)
         end
 
-        it "should get different adresses with correct visits" do
+        it "should return different addresses with correct visits count" do
             report = Report.new
 
-            report.add_metric("/web_adress", "255.255.255.255")
+            report.add_metric("/web_address", "255.255.255.255")
             report.add_metric("/home", "255.255.255.255")
             report.add_metric("/home", "168.200.255.254")
 
-            expect(report.get_visits).to include("/web_adress"=>1, "/home"=>2)
+            expect(report.get_visits).to include("/web_address"=>1, "/home"=>2)
         end
 
-        it "should get home adress with 2 unique visits" do
+        it "should return home address with 2 unique visits" do
             report = Report.new
 
             report.add_metric("/home", "255.255.255.255")
@@ -131,15 +134,15 @@ describe Report do
             expect(report.get_unique_visits).to include("/home"=>2)
         end
 
-        it "should get different adresses with correct unique visits" do
+        it "should return different addresses with correct unique visits count" do
             report = Report.new
 
-            report.add_metric("/web_adress", "255.255.255.255")
-            report.add_metric("/web_adress", "255.255.255.255")
+            report.add_metric("/web_address", "255.255.255.255")
+            report.add_metric("/web_address", "255.255.255.255")
             report.add_metric("/home", "255.255.255.255")
             report.add_metric("/home", "255.255.255.255")
 
-            expect(report.get_unique_visits).to include("/web_adress"=>1, "/home"=>1)
+            expect(report.get_unique_visits).to include("/web_address"=>1, "/home"=>1)
         end
     end
 end
