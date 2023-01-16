@@ -55,20 +55,20 @@ describe MetricItem do
 end
 
 describe Metrics do
+    let(:metrics_instance) {Metrics.new}
+
     it "should be initialized with empty hash" do
-        metrics = Metrics.new
-        expect(metrics.get_metrics).to eql Hash.new
+        expect(metrics_instance.get_metrics).to eql Hash.new
     end
 
     context "When testing add_metric method" do
 
         it "should implement add_metric" do
-            expect(Metrics.new).to respond_to(:add_metric)
+            expect(metrics_instance).to respond_to(:add_metric)
         end
 
         it "should add page if not already existing" do
-            metrics = Metrics.new
-
+            metrics = metrics_instance
             metrics.add_metric("/web_address", "255.255.255.255")
             metrics.add_metric("/home", "255.255.255.255")
 
@@ -77,8 +77,7 @@ describe Metrics do
         end
 
         it "should add ip address if page already exists" do
-            metrics = Metrics.new
-
+            metrics = metrics_instance
             metrics.add_metric("/web_address", "255.255.255.255")
             metrics.add_metric("/home", "255.255.255.255")
             metrics.add_metric("/home", "255.255.255.254")
@@ -90,23 +89,24 @@ describe Metrics do
 end
 
 describe Report do
+    let(:report_instance) {Report.new}
+
     it "should be kind of stats" do
-        expect(Report.new).to be_kind_of Metrics
+        expect(report_instance).to be_kind_of Metrics
     end
 
     it "should implement get_visits" do
-        expect(Report.new).to respond_to(:get_visits)
+        expect(report_instance).to respond_to(:get_visits)
     end
 
     it "should implement get_unique_visits" do
-        expect(Report.new).to respond_to(:get_unique_visits)
+        expect(report_instance).to respond_to(:get_unique_visits)
     end
 
     context "When testing correct values" do
 
         it "should return home address with 3 visits" do
-            report = Report.new
-
+            report = report_instance
             report.add_metric("/home", "255.255.255.255")
             report.add_metric("/home", "255.255.255.255")
             report.add_metric("/home", "168.200.255.254")
@@ -115,8 +115,7 @@ describe Report do
         end
 
         it "should return different addresses with correct visits count" do
-            report = Report.new
-
+            report = report_instance
             report.add_metric("/web_address", "255.255.255.255")
             report.add_metric("/home", "255.255.255.255")
             report.add_metric("/home", "168.200.255.254")
@@ -125,8 +124,7 @@ describe Report do
         end
 
         it "should return home address with 2 unique visits" do
-            report = Report.new
-
+            report = report_instance
             report.add_metric("/home", "255.255.255.255")
             report.add_metric("/home", "255.255.255.255")
             report.add_metric("/home", "168.200.255.254")
@@ -135,8 +133,7 @@ describe Report do
         end
 
         it "should return different addresses with correct unique visits count" do
-            report = Report.new
-
+            report = report_instance
             report.add_metric("/web_address", "255.255.255.255")
             report.add_metric("/web_address", "255.255.255.255")
             report.add_metric("/home", "255.255.255.255")
