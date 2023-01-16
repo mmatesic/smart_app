@@ -6,7 +6,9 @@ class Parser
     def read_file(file_path)
         IO.foreach(file_path) do |line|
             web, ip = line.split(' ', 2)
-            @report.add_metric(web, ip)
+            if valid_metrics?(web, ip)
+                @report.add_metric(web, ip)
+            end
         end
     end
 
@@ -18,9 +20,26 @@ class Parser
         format_output(@report.get_unique_visits, "unique visits")
     end
 
+    def valid_metrics?(web_address, ip_address)
+        if web_address?(web_address) && ip_address?(ip_address)
+            true
+        else
+            false
+        end
+    end
+
     private
 
     def format_output(metrics, description)
         metrics.each{|k, v| puts "#{k} #{v} #{description}"}
     end
+
+    def ip_address?(str)
+        !!(str =~ /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$/)
+    end
+
+    def web_address?(str)
+        !!(str =~ /^(\/\w+)+\/?\d*$/)
+    end
+
 end
