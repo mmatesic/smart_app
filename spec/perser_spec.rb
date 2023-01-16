@@ -155,4 +155,38 @@ describe Parser do
     it "should implement report_unique_visits_count" do
         expect(parser_instance).to respond_to(:report_unique_visits_count)
     end
+
+    context "When reading a file" do
+        it "should return correct address visit counts" do
+            parser = parser_instance
+            allow(IO).to receive(:foreach).and_yield("/home 255.255.255.255\n").and_yield("/home 168.255.255.255\n").and_yield("/web_adress 168.255.255.255\n")
+
+            parser.read_file('nofile.txt')
+            expect { parser.report_visits_count }.to output("/home 2 visits\n/web_adress 1 visits\n").to_stdout
+        end
+
+        it "should return ordered results by counts descending" do
+            parser = parser_instance
+            allow(IO).to receive(:foreach).and_yield("/web_adress 168.255.255.255\n").and_yield("/home 255.255.255.255\n").and_yield("/web_adress 168.255.255.255\n")
+
+            parser.read_file('nofile.txt')
+            expect { parser.report_visits_count }.to output("/web_adress 2 visits\n/home 1 visits\n").to_stdout
+        end
+
+        it "should return correct address unique visit counts" do
+            parser = parser_instance
+            allow(IO).to receive(:foreach).and_yield("/home 255.255.255.255\n").and_yield("/home 255.255.255.255\n").and_yield("/home 168.255.255.255\n")
+
+            parser.read_file('nofile.txt')
+            expect { parser.report_unique_visits_count }.to output("/home 2 visits\n").to_stdout
+        end
+
+        it "should return ordered unique results by counts descending" do
+            parser = parser_instance
+            allow(IO).to receive(:foreach).and_yield("/web_adress 168.255.255.255\n").and_yield("/home 255.255.255.255\n").and_yield("/web_adress 168.255.255.255\n").and_yield("/home 168.255.255.255\n")
+
+            parser.read_file('nofile.txt')
+            expect { parser.report_unique_visits_count }.to output("/home 2 visits\n/web_adress 1 visits\n").to_stdout
+        end
+    end
 end
