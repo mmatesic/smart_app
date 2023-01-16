@@ -1,6 +1,7 @@
 require 'metric_item.rb'
 require 'metrics.rb'
 require 'report.rb'
+require 'parser.rb'
 
 describe MetricItem do
     let(:item_instance) {MetricItem.new(web_address: "/web_address", ip_address: "255.255.255.255")}
@@ -141,5 +142,17 @@ describe Report do
 
             expect(report.get_unique_visits).to include("/web_address"=>1, "/home"=>1)
         end
+    end
+end
+
+describe Parser do
+    let(:parser_instance) {Parser.new}
+
+    it "should implement report_visits_count" do
+        expect(parser_instance).to respond_to(:report_visits_count)
+    end
+
+    it "should implement report_unique_visits_count" do
+        expect(parser_instance).to respond_to(:report_unique_visits_count)
     end
 end
