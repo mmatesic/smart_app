@@ -1,5 +1,6 @@
 require 'metric_item.rb'
 require 'metrics.rb'
+require 'report.rb'
 
 describe MetricItem do
     let(:item_instance) {MetricItem.new(web_address: "/web_adress", ip_address: "255.255.255.255")}
@@ -82,5 +83,19 @@ describe Metrics do
 
         expect(metrics.get_metrics.keys.size).to eq 2
         expect(metrics.get_metrics["/home"].ip_addresses).to eq Set["255.255.255.255", "255.255.255.254"]
+    end
+end
+
+describe Report do
+    it "should be kind of stats" do
+        expect(Report.new).to be_kind_of Metrics
+    end
+
+    it "should implement get_visits" do
+        expect(Report.new).to respond_to(:get_visits)
+    end
+
+    it "should implement get_unique_visits" do
+        expect(Report.new).to respond_to(:get_unique_visits)
     end
 end
