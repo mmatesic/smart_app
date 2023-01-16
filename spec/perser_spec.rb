@@ -98,4 +98,48 @@ describe Report do
     it "should implement get_unique_visits" do
         expect(Report.new).to respond_to(:get_unique_visits)
     end
+
+    context "Report should get correct values" do
+
+        it "should get home adress with 3 visits" do
+            report = Report.new
+
+            report.add_metric("/home", "255.255.255.255")
+            report.add_metric("/home", "255.255.255.255")
+            report.add_metric("/home", "168.200.255.254")
+
+            expect(report.get_visits).to include("/home"=>3)
+        end
+
+        it "should get different adresses with correct visits" do
+            report = Report.new
+
+            report.add_metric("/web_adress", "255.255.255.255")
+            report.add_metric("/home", "255.255.255.255")
+            report.add_metric("/home", "168.200.255.254")
+
+            expect(report.get_visits).to include("web_adress"=>1, "/home"=>2)
+        end
+
+        it "should get home adress with 2 unique visits" do
+            report = Report.new
+
+            report.add_metric("/home", "255.255.255.255")
+            report.add_metric("/home", "255.255.255.255")
+            report.add_metric("/home", "168.200.255.254")
+
+            expect(report.get_unique_visits).to include("/home"=>2)
+        end
+
+        it "should get different adresses with correct unique visits" do
+            report = Report.new
+
+            report.add_metric("/web_adress", "255.255.255.255")
+            report.add_metric("/web_adress", "255.255.255.255")
+            report.add_metric("/home", "255.255.255.255")
+            report.add_metric("/home", "255.255.255.255")
+
+            expect(report.get_unique_visits).to include("web_adress"=>1, "/home"=>1)
+        end
+    end
 end
